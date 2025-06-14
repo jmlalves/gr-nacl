@@ -20,22 +20,32 @@
 ########################################################################
 # Project setup
 ########################################################################
-cmake_minimum_required(VERSION 2.6)
-project(gr-nacl CXX C)
+cmake_minimum_required(VERSION 3.13)
+project(gr-nacl LANGUAGES CXX C)
 if(APPLE)
     include_directories(/opt/local/include)
 endif(APPLE)
 enable_testing()
 
-#select the release build type by default to get optimization flags
+# Enable C++17 support
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Select the release build type by default to get optimization flags
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release")
    message(STATUS "Build type not specified: defaulting to release.")
 endif(NOT CMAKE_BUILD_TYPE)
 set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 
-#make sure our local CMake Modules path comes first
+find_package(Gnuradio 3.10 REQUIRED COMPONENTS runtime blocks python3)
+message(STATUS "GNURADIO_CMAKE_DIR is: ${GNURADIO_CMAKE_DIR}")
+
+# Make sure our local CMake Modules path comes first
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/Modules)
+
+# Make sure GNUradio's own CMake modules are on the search path
+list(APPEND CMAKE_MODULE_PATH ${GNURADIO_CMAKE_DIR})
 
 ########################################################################
 # Compiler specific setup
@@ -115,7 +125,7 @@ find_package(Sodium)
 # caps such as FILTER or FFT) and change the version to the minimum
 # API compatible version required.
 set(GR_REQUIRED_COMPONENTS RUNTIME)
-find_package(Gnuradio "3.7.2" REQUIRED)
+find_package(Gnuradio "3.10.11" REQUIRED COMPONENTS runtime blocks python3)
 
 if(NOT CPPUNIT_FOUND)
     message(FATAL_ERROR "CppUnit required to compile nacl")

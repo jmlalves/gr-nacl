@@ -26,40 +26,51 @@ if(NOT nacl_sources)
 endif(NOT nacl_sources)
 
 ########################################################################
-# Include swig generation macros
+# Include SWIG and Python generation macros (GNU Radio 3.10+)
 ########################################################################
-find_package(SWIG)
-find_package(PythonLibs 2)
-if(NOT SWIG_FOUND OR NOT PYTHONLIBS_FOUND)
-    return()
-endif()
-include(GrSwig)
-include(GrPython)
+find_package(SWIG   REQUIRED)
+find_package(Python COMPONENTS Interpreter Development REQUIRED)
+include(GR_SWIG)
+include(GRPython)
 
 ########################################################################
 # Setup swig generation
 ########################################################################
+# Add GNUradio's SWIG include dirs
 foreach(incdir ${GNURADIO_RUNTIME_INCLUDE_DIRS})
     list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/gnuradio/swig)
-endforeach(incdir)
+endforeach()
 
-set(GR_SWIG_LIBRARIES gnuradio-nacl)
+# Documentation interface
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/nacl_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
-GR_SWIG_MAKE(nacl_swig nacl_swig.i)
+# Generate the SWIG Python module
+GR_SWIG_MODULE(
+    MODULE          nacl_swig
+    LANGUAGE        python
+    SOURCES         ${CMAKE_CURRENT_SOURCE_DIR}/nacl_swig.i
+    LIBRARIES       gnuradio-nacl
+    INCLUDE_DIRS    ${GR_SWIG_INCLUDE_DIRS}
+    DOC_SOURCE      ${GR_SWIG_DOC_FILE}
+    DOC_DIRS        ${GR_SWIG_DOC_DIRS}
+)
 
 ########################################################################
 # Install the build swig module
 ########################################################################
-GR_SWIG_INSTALL(TARGETS nacl_swig DESTINATION ${GR_PYTHON_DIR}/nacl)
+GR_SWIG_INSTALL(
+    TARGETS nacl_swig
+    DESTINATION ${GR_PYTHON_DIR}/nacl
+)
 
 ########################################################################
 # Install swig .i files for development
 ########################################################################
 install(
     FILES
-    nacl_swig.i
-    ${CMAKE_CURRENT_BINARY_DIR}/nacl_swig_doc.i
-    DESTINATION ${GR_INCLUDE_DIR}/nacl/swig
+        ${CMAKE_CURRENT_SOURCE_DIR}/nacl_swig.i
+        ${CMAKE_CURRENT_BINARY_DIR}/nacl_swig.i
+    DESTINATION
+        ${GR_INCLUDE}/nacl/swig
 )

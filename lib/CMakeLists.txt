@@ -21,6 +21,7 @@
 # Setup library
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
+find_package(spdlog REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
@@ -43,7 +44,11 @@ endif(NOT nacl_sources)
 
 add_library(gnuradio-nacl SHARED ${nacl_sources})
 target_link_libraries(gnuradio-nacl ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${SODIUM_LIBRARIES})
-set_target_properties(gnuradio-nacl PROPERTIES DEFINE_SYMBOL "gnuradio_nacl_EXPORTS")
+target_compile_features(gnuradio-nacl PUBLIC cxx_std_17)
+#set_target_properties(gnuradio-nacl PROPERTIES 
+#    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${VERSION_PATCH}
+#    SOVERSION ${PROJECT_VERSION_MAJOR}
+#)
 
 if(APPLE)
     set_target_properties(gnuradio-nacl PROPERTIES
