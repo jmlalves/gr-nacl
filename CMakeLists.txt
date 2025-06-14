@@ -163,7 +163,6 @@ link_directories(
 
 # Set component parameters
 set(GR_NACL_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "" FORCE)
-set(GR_NACL_SWIG_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/swig CACHE INTERNAL "" FORCE)
 
 ########################################################################
 # Create uninstall target
@@ -182,7 +181,6 @@ add_custom_target(uninstall
 ########################################################################
 add_subdirectory(include/nacl)
 add_subdirectory(lib)
-add_subdirectory(swig)
 add_subdirectory(python)
 add_subdirectory(grc)
 add_subdirectory(apps)
