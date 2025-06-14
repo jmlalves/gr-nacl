@@ -23,12 +23,13 @@ This is the GNU Radio NACL module. Place your Python package
 description here (python/__init__.py).
 '''
 
-# import swig generated symbols into the nacl namespace
-try:
-	# this might fail if the module is python-only
-	from nacl_swig import *
-except ImportError:
-	pass
+from ._nacl import (
+    encrypt_public,
+    decrypt_public,
+    generate_keypair,
+    generate_key,
+)
+
 
 # import any pure python here
 #
