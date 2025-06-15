@@ -25,30 +25,43 @@
  * add them here.
  */
 
-#include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <nacl/crypt_tagged_stream.h>
+#include <gnuradio/testing.h>
 
-class qa_nacl : public CppUnit::TestFixture
-{
-    CPPUNIT_TEST_SUITE(qa_nacl);
-    CPPUNIT_TEST(test_crypt_tagged_stream);
-    CPPUNIT_TEST_SUITE_END();
+#include <nacl/crypt_tagged_stream.h>
+#include <nacl/generate_key.h>
+#include <nacl/generate_keypair.h>
+
+namespace gr {
+namespace nacl {
+
+class qa_nacl : public CppUnit::TestFixture {
+  CPPUNIT_TEST_SUITE(qa_nacl);
+    CPPUNIT_TEST(test_crypt_tagged_stream_make);
+    CPPUNIT_TEST(test_generate_key_make);
+    CPPUNIT_TEST(test_generate_keypair_make);
+  CPPUNIT_TEST_SUITE_END();
 
 public:
-    void setUp()    {}
-    void tearDown() {}
-
-    void test_crypt_tagged_stream()
-    {
-        auto blk = gr::nacl::crypt_tagged_stream::make(
-            "mykey",             // encryption key
-            "mynonce",           // nonce
-            false,               // rotate nonce
-            "packet_len"         // length-tag key
-        );
-        CPPUNIT_ASSERT(blk);
-    }
+  void test_crypt_tagged_stream_make() {
+    auto b = crypt_tagged_stream::make("keyfile","noncefile",false,"packet_len");
+    CPPUNIT_ASSERT(b);
+  }
+  void test_generate_key_make() {
+    auto k = generate_key::make("dummyfile");
+    CPPUNIT_ASSERT(k);
+  }
+  void test_generate_keypair_make() {
+    auto kp = generate_keypair::make("skfile","pkfile");
+    CPPUNIT_ASSERT(kp);
+  }
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(qa_nacl);
+CPPUNIT_TEST_SUITE_REGISTRATION(gr::nacl::qa_nacl);
+
+}  // namespace nacl
+}  // namespace gr
+
+int main(int argc, char **argv) {
+    return gr::testing::run_tests(argc, argv);
+}

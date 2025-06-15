@@ -68,24 +68,20 @@ install(TARGETS gnuradio-nacl
 ########################################################################
 # Build and register unit test
 ########################################################################
-include(GrTest)
+find_package(CppUnit REQUIRED)
+include(GrTest)                     # brings in gnuradio/testing.h runner
 
-include_directories(${CPPUNIT_INCLUDE_DIRS})
-
-list(APPEND test_nacl_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_nacl.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_nacl.cc
+add_executable(test-nacl
+  test_nacl.cc
+  qa_nacl.cc
 )
-
-add_executable(test-nacl ${test_nacl_sources})
-
-target_link_libraries(
-  test-nacl
-  ${GNURADIO_RUNTIME_LIBRARIES}
-  ${Boost_LIBRARIES}
+target_link_libraries(test-nacl PRIVATE
+  gnuradio-nacl       # your block library
+  gnuradio-runtime
   ${CPPUNIT_LIBRARIES}
-  ${SODIUM_LIBRARIES}
-  gnuradio-nacl
 )
-
-GR_ADD_TEST(test_nacl test-nacl)
+target_include_directories(test-nacl PRIVATE
+  ${CPPUNIT_INCLUDE_DIRS}
+)
+# this macro from GrTest.cmake will register and run your CppUnit tests
+gr_test_run(test-nacl)

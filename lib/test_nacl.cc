@@ -20,55 +20,68 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <nacl/generate_key.h>
-#include <nacl/generate_keypair.h>
+#include <gnuradio/testing.h>   // GNURadio’s CppUnit runner
+
+#include <nacl/crypt_tagged_stream.h>
 #include <nacl/encrypt_public.h>
 #include <nacl/decrypt_public.h>
 #include <nacl/encrypt_secret.h>
 #include <nacl/decrypt_secret.h>
+#include <nacl/generate_key.h>
+#include <nacl/generate_keypair.h>
 
-class test_nacl : public CppUnit::TestFixture
-{
-    CPPUNIT_TEST_SUITE(test_nacl);
+namespace gr {
+namespace nacl {
+
+class test_nacl : public CppUnit::TestFixture {
+  CPPUNIT_TEST_SUITE(test_nacl);
+    CPPUNIT_TEST(test_crypt_tagged_stream);
+    CPPUNIT_TEST(test_encrypt_public);
+    CPPUNIT_TEST(test_decrypt_public);
+    CPPUNIT_TEST(test_encrypt_secret);
+    CPPUNIT_TEST(test_decrypt_secret);
     CPPUNIT_TEST(test_generate_key);
     CPPUNIT_TEST(test_generate_keypair);
-    CPPUNIT_TEST(test_encrypt_decrypt_public);
-    CPPUNIT_TEST(test_encrypt_decrypt_secret);
-    CPPUNIT_TEST_SUITE_END();
+  CPPUNIT_TEST_SUITE_END();
 
 public:
-    void setUp()    {}
-    void tearDown() {}
-
-    void test_generate_key()
-    {
-        auto blk = gr::nacl::generate_key::make("test_key.bin");
-        CPPUNIT_ASSERT(blk);
-    }
-
-    void test_generate_keypair()
-    {
-        auto blk = gr::nacl::generate_keypair::make("sk.bin","pk.bin");
-        CPPUNIT_ASSERT(blk);
-    }
-
-    void test_encrypt_decrypt_public()
-    {
-        auto enc = gr::nacl::encrypt_public::make("pk.bin","sk.bin");
-        CPPUNIT_ASSERT(enc);
-        auto dec = gr::nacl::decrypt_public::make("pk.bin","sk.bin");
-        CPPUNIT_ASSERT(dec);
-    }
-
-    void test_encrypt_decrypt_secret()
-    {
-        auto enc = gr::nacl::encrypt_secret::make("secret_key.bin");
-        CPPUNIT_ASSERT(enc);
-        auto dec = gr::nacl::decrypt_secret::make("secret_key.bin");
-        CPPUNIT_ASSERT(dec);
-    }
+  void test_crypt_tagged_stream() {
+    auto b = crypt_tagged_stream::make("keyfile", "noncefile", false, "packet_len");
+    CPPUNIT_ASSERT(b);
+  }
+  void test_encrypt_public() {
+    auto b = encrypt_public::make("pkfile","skfile");
+    CPPUNIT_ASSERT(b);
+  }
+  void test_decrypt_public() {
+    auto b = decrypt_public::make("pkfile","skfile");
+    CPPUNIT_ASSERT(b);
+  }
+  void test_encrypt_secret() {
+    auto b = encrypt_secret::make("keyfile");
+    CPPUNIT_ASSERT(b);
+  }
+  void test_decrypt_secret() {
+    auto b = decrypt_secret::make("keyfile");
+    CPPUNIT_ASSERT(b);
+  }
+  void test_generate_key() {
+    auto b = generate_key::make("dummyfile");
+    CPPUNIT_ASSERT(b);
+  }
+  void test_generate_keypair() {
+    auto b = generate_keypair::make("skfile","pkfile");
+    CPPUNIT_ASSERT(b);
+  }
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(test_nacl);
+CPPUNIT_TEST_SUITE_REGISTRATION(gr::nacl::test_nacl);
+
+}  // namespace nacl
+}  // namespace gr
+
+// this main comes from <gnuradio/testing.h>
+int main(int argc, char **argv) {
+    return gr::testing::run_tests(argc, argv);
+}
