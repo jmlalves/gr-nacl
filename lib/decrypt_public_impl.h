@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/* /* 
+/*  * 
  *  * Copyright 2025 Joao Alves
  *  * 
  *  * This is free software; you can redistribute it and/or modify

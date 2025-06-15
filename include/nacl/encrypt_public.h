@@ -48,7 +48,7 @@ namespace gr {
        * class. nacl::encrypt_public::make is the public interface for
        * creating new instances.
        */
-      static sptr make(std::string filename_pk, std::string filename_sk);
+      static sptr make(const std::string &filename_pk, const std::string &filename_sk);
     };
 
   } // namespace nacl

@@ -47,7 +47,7 @@ namespace gr {
        * class. nacl::generate_key::make is the public interface for
        * creating new instances.
        */
-      static sptr make(std::string filename_key);
+      static sptr make(const std::string &filename_sk, const std::string &filename_pk);
     };
 
   } // namespace nacl
