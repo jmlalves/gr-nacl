@@ -32,23 +32,23 @@ namespace gr {
     {
      private:
       pmt::pmt_t d_port_id_in;
-      pmt::pmt_t d_port_id_out;    // CHANGE: declare output port
+      pmt::pmt_t d_port_id_out;
       std::string d_key;
       std::string d_nonce;
       bool        d_rotate_nonce;
 
      public:
-      crypt_tagged_stream_impl(const std::string &key,
-                               const std::string &nonce,
+      crypt_tagged_stream_impl(const std::string& key,
+                               const std::string& nonce,
                                bool rotate_nonce,
-                               const std::string &len_key);
+                               const std::string& len_key);
       ~crypt_tagged_stream_impl() override;
 
-      int calculate_output_stream_length(const gr_vector_int &ninput_items) override;
-      void handle_msg(pmt::pmt_t msg) override;
+      int calculate_output_stream_length(const gr_vector_int& ninput_items);
+      void handle_msg(pmt::pmt_t msg);
       int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items) override;
+               gr_vector_const_void_star& input_items,
+               gr_vector_void_star& output_items);
     };
 
   } // namespace nacl

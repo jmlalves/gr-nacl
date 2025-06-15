@@ -32,17 +32,17 @@ namespace gr {
     {
      private:
       pmt::pmt_t d_port_id_in;
-      pmt::pmt_t d_port_id_out;    // CHANGE: declare output port
+      pmt::pmt_t d_port_id_out;
       std::string d_key_file;
 
      public:
-      generate_key_impl(const std::string &filename_key);
+      generate_key_impl(const std::string& filename_key);
       ~generate_key_impl() override;
 
-      void handle_msg(pmt::pmt_t msg) override;
+      void handle_msg(pmt::pmt_t msg);
       int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items) override;
+               gr_vector_const_void_star& input_items,
+               gr_vector_void_star& output_items);
     };
 
   } // namespace nacl
