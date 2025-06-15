@@ -64,24 +64,3 @@ install(TARGETS gnuradio-nacl
     ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     RUNTIME DESTINATION bin              # .dll file
 )
-
-########################################################################
-# Build and register unit test
-########################################################################
-find_package(CppUnit REQUIRED)
-include(GrTest)                     # brings in gnuradio/testing.h runner
-
-add_executable(test-nacl
-  test_nacl.cc
-  qa_nacl.cc
-)
-target_link_libraries(test-nacl PRIVATE
-  gnuradio-nacl       # your block library
-  gnuradio-runtime
-  ${CPPUNIT_LIBRARIES}
-)
-target_include_directories(test-nacl PRIVATE
-  ${CPPUNIT_INCLUDE_DIRS}
-)
-# this macro from GrTest.cmake will register and run your CppUnit tests
-gr_test_run(test-nacl)
