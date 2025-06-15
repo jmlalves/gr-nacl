@@ -31,22 +31,22 @@ namespace gr {
 
     class decrypt_public_impl : public decrypt_public
     {
-     private:
+    private:
       pmt::pmt_t d_port_id_in;
       pmt::pmt_t d_port_id_out;
       std::string d_pk_file;
       std::string d_sk_file;
 
-     public:
+    public:
       decrypt_public_impl(const std::string& filename_pk,
-                         const std::string& filename_sk);
+                        const std::string& filename_sk);
       ~decrypt_public_impl() override;
 
       void handle_msg(pmt::pmt_t msg);
       int work(int noutput_items,
-               gr_vector_const_void_star& input_items,
-               gr_vector_void_star& output_items);
-    };
+              gr_vector_const_void_star& input_items,
+              gr_vector_void_star& output_items);
+    }
 
   } // namespace nacl
 } // namespace gr

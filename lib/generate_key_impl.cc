@@ -35,10 +35,7 @@ generate_key::make(const std::string &filename_key)
 }
 
 generate_key_impl::generate_key_impl(const std::string &filename_key)
-    : generate_key("generate_key",
-                   gr::io_signature::make(0,0,0),
-                   gr::io_signature::make(0,0,0)),
-      d_key_file(filename_key)
+    : d_key_file(filename_key)
 {
     d_port_id_in = pmt::mp("in");
     message_port_register_in(d_port_id_in);
@@ -55,7 +52,7 @@ generate_key_impl::handle_msg(pmt::pmt_t)
 {
     // stub: issue a 32-byte zero key
     std::vector<unsigned char> key(32, 0);
-    pmt::pmt_t out = pmt::make_blob(key.data(), key.size());
+    pmt::pmt_t out = pmt::init_u8vector(key.size(), key.data());
     message_port_pub(d_port_id_out, out);
 }
 

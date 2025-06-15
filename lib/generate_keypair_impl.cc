@@ -37,11 +37,8 @@ generate_keypair::make(const std::string &filename_sk,
 }
 
 generate_keypair_impl::generate_keypair_impl(const std::string &filename_sk,
-                                             const std::string &filename_pk)
-    : generate_keypair("generate_keypair",
-                       gr::io_signature::make(0,0,0),
-                       gr::io_signature::make(0,0,0)),
-      d_sk_file(filename_sk),
+                                            const std::string &filename_pk)
+    : d_sk_file(filename_sk),
       d_pk_file(filename_pk)
 {
     d_port_id_in = pmt::mp("in");
@@ -61,8 +58,8 @@ generate_keypair_impl::handle_msg(pmt::pmt_t)
 {
     // stub: issue 32-byte zero keypair
     std::vector<unsigned char> sk(32,0), pk(32,0);
-    pmt::pmt_t sk_blob = pmt::make_blob(sk.data(), sk.size());
-    pmt::pmt_t pk_blob = pmt::make_blob(pk.data(), pk.size());
+    pmt::pmt_t sk_blob = pmt::init_u8vector(sk.size(), sk.data());
+    pmt::pmt_t pk_blob = pmt::init_u8vector(pk.size(), pk.data());
     message_port_pub(d_port_id_sk, sk_blob);
     message_port_pub(d_port_id_pk, pk_blob);
 }

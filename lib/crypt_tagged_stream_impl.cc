@@ -37,14 +37,10 @@ crypt_tagged_stream::make(const std::string &key,
 }
 
 crypt_tagged_stream_impl::crypt_tagged_stream_impl(const std::string &key,
-                                                   const std::string &nonce,
-                                                   bool rotate_nonce,
-                                                   const std::string &len_key)
-    : crypt_tagged_stream("crypt_tagged_stream",
-                          gr::io_signature::make(0,0,0),
-                          gr::io_signature::make(0,0,0),
-                          len_key),
-      d_key(key), d_nonce(nonce), d_rotate_nonce(rotate_nonce)
+                                                const std::string &nonce,
+                                                bool rotate_nonce,
+                                                const std::string &len_key)
+    : d_key(key), d_nonce(nonce), d_rotate_nonce(rotate_nonce)
 {
     d_port_id_in = pmt::mp("in");
     message_port_register_in(d_port_id_in);
@@ -68,17 +64,18 @@ crypt_tagged_stream_impl::handle_msg(pmt::pmt_t msg)
 {
     if (pmt::is_blob(msg)) {
         size_t len = pmt::blob_length(msg);
-        const void *data = pmt::blob_data(msg);
+        const unsigned char *data = static_cast<const unsigned char*>(pmt::blob_data(msg));
         // stub: echo input
-        pmt::pmt_t out = pmt::init_blob(data, len);
+        pmt::pmt_t out = pmt::init_u8vector(len, data);
         message_port_pub(d_port_id_out, out);
     }
 }
 
 int
-crypt_tagged_stream_impl::work(int noutput_items,
+crypt_tagged_stream_impl::work(int                        noutput_items,
+                              gr_vector_int            &ninput_items,
                               gr_vector_const_void_star &,
-                              gr_vector_void_star &)
+                              gr_vector_void_star       &)
 {
     return noutput_items;
 }

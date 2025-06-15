@@ -29,19 +29,16 @@ namespace nacl {
 
 decrypt_public::sptr
 decrypt_public::make(const std::string &filename_pk,
-                     const std::string &filename_sk)
+                    const std::string &filename_sk)
 {
     return decrypt_public::sptr(
         new decrypt_public_impl(filename_pk, filename_sk));
 }
 
 decrypt_public_impl::decrypt_public_impl(const std::string &filename_pk,
-                                         const std::string &filename_sk)
-    : decrypt_public("decrypt_public",
-                     gr::io_signature::make(0,0,0),
-                     gr::io_signature::make(0,0,0)),
-      d_pk_file(filename_pk),
-      d_sk_file(filename_sk)
+                                        const std::string &filename_sk)
+        : d_pk_file(filename_pk),
+        d_sk_file(filename_sk)
 {
     d_port_id_in = pmt::mp("in");
     message_port_register_in(d_port_id_in);
@@ -58,9 +55,8 @@ decrypt_public_impl::handle_msg(pmt::pmt_t msg)
 {
     if (pmt::is_blob(msg)) {
         size_t len = pmt::blob_length(msg);
-        const void *data = pmt::blob_data(msg);
-        // stub: echo input
-        pmt::pmt_t out = pmt::init_blob(data, len);
+        const unsigned char *data = static_cast<const unsigned char*>(pmt::blob_data(msg));
+        pmt::pmt_t out = pmt::init_u8vector(len, data);
         message_port_pub(d_port_id_out, out);
     }
 }

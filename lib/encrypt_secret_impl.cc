@@ -34,10 +34,7 @@ encrypt_secret::make(const std::string &filename_key)
 }
 
 encrypt_secret_impl::encrypt_secret_impl(const std::string &filename_key)
-    : encrypt_secret("encrypt_secret",
-                     gr::io_signature::make(0,0,0),
-                     gr::io_signature::make(0,0,0)),
-      d_key_file(filename_key)
+    : d_key_file(filename_key)
 {
     d_port_id_in = pmt::mp("in");
     message_port_register_in(d_port_id_in);
@@ -54,9 +51,8 @@ encrypt_secret_impl::handle_msg(pmt::pmt_t msg)
 {
     if (pmt::is_blob(msg)) {
         size_t len = pmt::blob_length(msg);
-        const void *data = pmt::blob_data(msg);
-        // stub: echo input
-        pmt::pmt_t out = pmt::init_blob(data, len);
+        const unsigned char *data = static_cast<const unsigned char*>(pmt::blob_data(msg));
+        pmt::pmt_t out = pmt::init_u8vector(len, data);
         message_port_pub(d_port_id_out, out);
     }
 }
