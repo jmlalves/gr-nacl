@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/* /* 
+/*  * 
  *  * Copyright 2025 Joao Alves
  *  * 
  *  * This is free software; you can redistribute it and/or modify
@@ -91,10 +91,10 @@ namespace gr {
       std::memcpy(nonce_char.data(), raw_nonce, nonce_size);
 
       // … perform decryption into a std::vector<unsigned char> …
-      // std::vector<unsigned char> decrypted(data_char.size() - MAC_BYTES);
-      // decrypt_fn(data_char.data(), data_char.size(),
-      //            nonce_char.data(), nonce_char.size(),
-      //            decrypted.data());
+       std::vector<unsigned char> decrypted(data_char.size() - MAC_BYTES);
+       decrypt_fn(data_char.data(), data_char.size(),
+                  nonce_char.data(), nonce_char.size(),
+                  decrypted.data());
 
       // CHANGE: prepare output via std::vector
       std::vector<unsigned char> decrypted;  // fill this with your decrypted bytes

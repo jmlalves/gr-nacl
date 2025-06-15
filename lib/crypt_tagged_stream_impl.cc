@@ -95,9 +95,9 @@ namespace gr {
       // … YOUR ENCRYPTION/DECRYPTION LOGIC HERE …
       // e.g. compute ciphertext_out and out_size
       //
-      size_t out_size = /* compute output size */;
+      size_t out_size = 0; /* compute output size */
       std::vector<unsigned char> data_out(out_size);
-      // std::memcpy(data_out.data(), ciphertext_ptr, out_size);
+      std::memcpy(data_out.data(), ciphertext_ptr, out_size);
 
       // CHANGE: use std::vector payload for output
       pmt::pmt_t blob = pmt::make_blob(data_out.data(), data_out.size());

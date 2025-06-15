@@ -84,13 +84,13 @@ namespace gr {
 
       // … perform your public-key encryption here …
       // For example, compute ciphertext of length out_size:
-      size_t out_size = /* compute encrypted size */;
+      size_t out_size = 0;/* compute encrypted size */
       std::vector<unsigned char> data_out(out_size);
-      // encrypt_public_fn(
-      //   data_in.data(), data_size,
-      //   d_pk_file.c_str(), /* or however you load your key */,
-      //   data_out.data()
-      // );
+      encrypt_public_fn(
+        data_in.data(), data_size,
+        d_pk_file.c_str(), /* or however you load your key */,
+        data_out.data()
+      );
 
       // CHANGE: package vector into a PMT blob and send it out
       pmt::pmt_t out_blob = pmt::make_blob(data_out.data(), data_out.size());

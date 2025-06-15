@@ -85,15 +85,15 @@ namespace gr {
       // Optionally inspect msg for parameters…
 
       // CHANGE: define lengths for secret and public keys
-      constexpr size_t SK_LEN = /* your secret-key length */;
-      constexpr size_t PK_LEN = /* your public-key length */;
+      constexpr size_t SK_LEN = 0;/* your secret-key length */
+      constexpr size_t PK_LEN = 0;/* your public-key length */
 
       // CHANGE: generate keypair bytes into std::vector containers
       std::vector<unsigned char> sk_bytes(SK_LEN);
       std::vector<unsigned char> pk_bytes(PK_LEN);
 
       // TODO: fill sk_bytes and pk_bytes, e.g. via libsodium:
-      // crypto_box_keypair(pk_bytes.data(), sk_bytes.data());
+      crypto_box_keypair(pk_bytes.data(), sk_bytes.data());
 
       // CHANGE: package each vector into a PMT blob and publish
       pmt::pmt_t sk_blob = pmt::make_blob(sk_bytes.data(), sk_bytes.size());

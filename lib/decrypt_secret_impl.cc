@@ -94,7 +94,7 @@ namespace gr {
 
       // … perform your decryption here, writing into msg_decrypted.data() …
       // CHANGE: allocate a std::vector for the decrypted output
-      size_t msg_len = /* compute length of decrypted data */;
+      size_t msg_len = 0;/* compute length of decrypted data */
       std::vector<unsigned char> msg_decrypted(msg_len);
       // decrypt_secret_fn(data_char.data(), data_size,
       //                   nonce_char.data(), nonce_size,

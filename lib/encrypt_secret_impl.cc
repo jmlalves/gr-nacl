@@ -86,11 +86,11 @@ namespace gr {
 
       // … perform your secret‐key encryption here into data_out …
       // CHANGE: allocate std::vector for encrypted output
-      size_t out_size = /* compute encrypted length */;
+      size_t out_size = 0;/* compute encrypted length */
       std::vector<unsigned char> data_out(out_size);
-      // secret_encrypt_fn(data_in.data(), data_size,
-      //                   d_key_file.c_str(),
-      //                   data_out.data());
+      secret_encrypt_fn(data_in.data(), data_size,
+                        d_key_file.c_str(),
+                        data_out.data());
 
       // CHANGE: publish back as a PMT blob using the vector’s data()
       pmt::pmt_t out_blob = pmt::make_blob(

@@ -79,11 +79,11 @@ namespace gr {
       // (Optionally inspect msg for parameters…)
 
       // CHANGE: generate your key bytes into a std::vector
-      size_t key_len = /* your key length in bytes */;
+      size_t key_len = 0;/* your key length in bytes */
       std::vector<unsigned char> key_bytes(key_len);
       // e.g. fill via libsodium or std::random_device:
-      // std::random_device rd;
-      // std::generate(key_bytes.begin(), key_bytes.end(), std::ref(rd));
+      std::random_device rd;
+      std::generate(key_bytes.begin(), key_bytes.end(), std::ref(rd));
 
       // CHANGE: package the vector into a PMT blob and publish
       pmt::pmt_t out_blob = pmt::make_blob(key_bytes.data(),
