@@ -3,10 +3,13 @@
 #include <pybind11/stl.h>   // if you need STL conversions
 
 // include your GR block headers
-#include <nacl/encrypt_public_impl.h>
-#include <nacl/decrypt_public_impl.h>
-#include <nacl/generate_keypair_impl.h>
-#include <nacl/generate_key_impl.h>
+#include <nacl/encrypt_public.h>
+#include <nacl/decrypt_public.h>
+#include <nacl/encrypt_secret.h>
+#include <nacl/decrypt_secret.h>
+#include <nacl/generate_key.h>
+#include <nacl/generate_keypair.h>
+#include <nacl/crypt_tagged_stream.h>
 
 namespace py = pybind11;
 
