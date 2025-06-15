@@ -48,10 +48,8 @@ namespace gr {
        * class. nacl::generate_keypair::make is the public interface for
        * creating new instances.
        */
-      static sptr make(const std::string &key,
-                      const std::string &nonce,
-                      bool rotate_nonce=false,
-                      const std::string &len_key="packet_len");
+      static sptr make(const std::string &filename_sk,
+                      const std::string &filename_pk);
     };
 
   } // namespace nacl
