@@ -1,84 +1,64 @@
-/* -*- c++ -*- */
-/* Copyright 2025 Joao Alves
- * 
- * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
- * 
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
- */
+#ifndef INCLUDED_NACL_CRYPT_TAGGED_STREAM_IMPL_H
+#define INCLUDED_NACL_CRYPT_TAGGED_STREAM_IMPL_H
 
-// lib/crypt_tagged_stream_impl.cc
-#include "crypt_tagged_stream_impl.h"
-#include <gnuradio/io_signature.h>
-#include <cstring>
-#include <functional>
+#include <nacl/crypt_tagged_stream.h>
+#include <pmt/pmt.h>
 
 namespace gr {
-namespace nacl {
+  namespace nacl {
 
-crypt_tagged_stream::sptr
-crypt_tagged_stream::make(const std::string &key,
-                          const std::string &nonce,
-                          bool rotate_nonce,
-                          const std::string &len_key)
-{
-    return crypt_tagged_stream::sptr(
-        new crypt_tagged_stream_impl(key, nonce, rotate_nonce, len_key));
-}
+    class crypt_tagged_stream_impl : public crypt_tagged_stream
+    {
+     private:
+      std::string d_key;
+      std::string d_nonce;
+      bool        d_rotate_nonce;
+      pmt::pmt_t  d_port_id_in;
+      pmt::pmt_t  d_port_id_out;
 
-crypt_tagged_stream_impl::crypt_tagged_stream_impl(const std::string &key,
-                                                const std::string &nonce,
-                                                bool rotate_nonce,
-                                                const std::string &len_key)
-    : d_key(key), d_nonce(nonce), d_rotate_nonce(rotate_nonce)
-{
-    d_port_id_in = pmt::mp("in");
-    message_port_register_in(d_port_id_in);
-    set_msg_handler(d_port_id_in,
-        std::bind(&crypt_tagged_stream_impl::handle_msg, this, std::placeholders::_1));
-    d_port_id_out = pmt::mp("out");
-    message_port_register_out(d_port_id_out);
-}
+     public:
+      /**
+       * Constructor
+       * @param key the encryption key
+       * @param nonce the nonce to use
+       * @param rotate_nonce whether to rotate nonce per-packet
+       * @param len_key the name of the length tag key
+       */
+      crypt_tagged_stream_impl(const std::string &key,
+                               const std::string &nonce,
+                               bool               rotate_nonce = false,
+                               const std::string &len_key       = "packet_len");
 
-crypt_tagged_stream_impl::~crypt_tagged_stream_impl() = default;
+      ~crypt_tagged_stream_impl();
 
-int
-crypt_tagged_stream_impl::calculate_output_stream_length(const gr_vector_int &ninput_items)
-{
-    // stub: 1-for-1
-    return ninput_items[0];
-}
+      /**
+       * PMT message handler
+       * Called when a PMT blob message arrives on the "in" port
+       */
+      void handle_msg(pmt::pmt_t msg);
 
-void
-crypt_tagged_stream_impl::handle_msg(pmt::pmt_t msg)
-{
-    if (pmt::is_blob(msg)) {
-        size_t len = pmt::blob_length(msg);
-        const unsigned char *data = static_cast<const unsigned char*>(pmt::blob_data(msg));
-        // stub: echo input
-        pmt::pmt_t out = pmt::init_u8vector(len, data);
-        message_port_pub(d_port_id_out, out);
-    }
-}
+      /**
+       * Calculate how many output items are produced for given input counts
+       * @param ninput_items vector of input stream counts
+       * @return number of output items to allocate
+       */
+      int calculate_output_stream_length(const gr_vector_int &ninput_items) override;
 
-int
-crypt_tagged_stream_impl::work(int                        noutput_items,
-                              gr_vector_int            &ninput_items,
-                              gr_vector_const_void_star &input_items,
-                              gr_vector_void_star       &output_items)
-{
-    return noutput_items;
-}
+      /**
+       * Tagged-stream work function
+       * @param noutput_items number of output items to produce
+       * @param ninput_items (in/out) vector of available input items
+       * @param input_items array of input pointers
+       * @param output_items array of output pointers
+       * @return number of output items actually produced
+       */
+      int work(int                        noutput_items,
+               gr_vector_int            &ninput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star       &output_items) override;
+    };
 
-} // namespace nacl
+  } // namespace nacl
 } // namespace gr
+
+#endif /* INCLUDED_NACL_CRYPT_TAGGED_STREAM_IMPL_H */
