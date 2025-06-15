@@ -22,6 +22,8 @@
 #ifndef INCLUDED_NACL_GENERATE_KEYPAIR_H
 #define INCLUDED_NACL_GENERATE_KEYPAIR_H
 
+#pragma once
+#include <memory>
 #include <nacl/api.h>
 #include <gnuradio/block.h>
 
@@ -36,7 +38,7 @@ namespace gr {
     class NACL_API generate_keypair : virtual public gr::block
     {
      public:
-      typedef boost::shared_ptr<generate_keypair> sptr;
+      typedef std::shared_ptr<generate_keypair> sptr;
 
       /*!
        * \brief Return a shared_ptr to a new instance of nacl::generate_keypair.

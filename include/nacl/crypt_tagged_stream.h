@@ -21,9 +21,10 @@
 #ifndef INCLUDED_NACL_CRYPT_TAGGED_STREAM_H
 #define INCLUDED_NACL_CRYPT_TAGGED_STREAM_H
 
+#pragma once
+#include <memory>
 #include <nacl/api.h>
 #include <gnuradio/tagged_stream_block.h>
-
 namespace gr {
   namespace nacl {
 
@@ -35,7 +36,7 @@ namespace gr {
     class NACL_API crypt_tagged_stream : virtual public gr::tagged_stream_block
     {
      public:
-      typedef boost::shared_ptr<crypt_tagged_stream> sptr;
+      typedef std::shared_ptr<crypt_tagged_stream> sptr;
 
       /*!
        * \brief Return a shared_ptr to a new instance of nacl::crypt_tagged_stream.

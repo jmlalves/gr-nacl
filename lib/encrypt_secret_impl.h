@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/* Copyright 2015 Stefan Wunsch
+/* Copyright 2025 Joao Alves
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,32 +17,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_NACL_ENCRYPT_SECRET_IMPL_H
-#define INCLUDED_NACL_ENCRYPT_SECRET_IMPL_H
+// include/nacl/encrypt_secret.h
+#ifndef INCLUDED_NACL_ENCRYPT_SECRET_H
+#define INCLUDED_NACL_ENCRYPT_SECRET_H
 
-#include <nacl/encrypt_secret.h>
+#include <nacl/api.h>
+#include <gnuradio/block.h>
+#include <string>
+// CHANGE: for std::shared_ptr
+#include <memory>
 
 namespace gr {
   namespace nacl {
 
-    class encrypt_secret_impl : public encrypt_secret
+    /*!
+     * \brief Secret-key encryption block
+     * \ingroup nacl
+     */
+    class NACL_API encrypt_secret : virtual public gr::block
     {
-     private:
-      // Nothing to declare in this block.
-
      public:
-      encrypt_secret_impl(std::string filename_key);
-      ~encrypt_secret_impl();
-      
-      void handle_msg(pmt::pmt_t msg);
-      
-      pmt::pmt_t d_port_id_in, d_port_id_out;
-      std::string d_filename_key;
-      unsigned char *d_key;
+      // CHANGE: use C++11 shared_ptr instead of boost
+      typedef std::shared_ptr<encrypt_secret> sptr;
+
+      static sptr make(const std::string &filename_key);
     };
 
   } // namespace nacl
 } // namespace gr
 
-#endif /* INCLUDED_NACL_ENCRYPT_SECRET_IMPL_H */
-
+#endif /* INCLUDED_NACL_ENCRYPT_SECRET_H */

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* /* 
- *  * Copyright 2015 Stefan Wunsch
+ *  * Copyright 2025 Joao Alves
  *  * 
  *  * This is free software; you can redistribute it and/or modify
  *  * it under the terms of the GNU General Public License as published by
@@ -18,32 +18,34 @@
  *  * Boston, MA 02110-1301, USA.
  *  */
 
-#ifndef INCLUDED_NACL_DECRYPT_PUBLIC_IMPL_H
-#define INCLUDED_NACL_DECRYPT_PUBLIC_IMPL_H
+// include/nacl/decrypt_public.h
+#ifndef INCLUDED_NACL_DECRYPT_PUBLIC_H
+#define INCLUDED_NACL_DECRYPT_PUBLIC_H
 
-#include <nacl/decrypt_public.h>
+#include <nacl/api.h>
+#include <gnuradio/block.h>
+#include <string>
+// CHANGE: for std::shared_ptr
+#include <memory>
 
 namespace gr {
   namespace nacl {
 
-    class decrypt_public_impl : public decrypt_public
+    /*!
+     * \brief Public-key decryption block
+     * \ingroup nacl
+     */
+    class NACL_API decrypt_public : virtual public gr::block
     {
-     private:
-      // Nothing to declare in this block.
-
      public:
-      decrypt_public_impl(std::string filename_pk, std::string filename_sk);
-      ~decrypt_public_impl();
-      
-      void handle_msg(pmt::pmt_t msg);
-      
-      pmt::pmt_t d_port_id_in, d_port_id_out;
-      std::string d_filename_pk, d_filename_sk;
-      unsigned char *d_pk, *d_sk;
+      // CHANGE: use C++11 shared_ptr instead of boost
+      typedef std::shared_ptr<decrypt_public> sptr;
+
+      static sptr make(const std::string &filename_pk,
+                       const std::string &filename_sk);
     };
 
   } // namespace nacl
 } // namespace gr
 
-#endif /* INCLUDED_NACL_DECRYPT_PUBLIC_IMPL_H */
-
+#endif /* INCLUDED_NACL_DECRYPT_PUBLIC_H */

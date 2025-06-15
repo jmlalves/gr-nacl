@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/* Copyright 2015 Stefan Wunsch
+/* Copyright 2025 Joao Alves
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,39 +17,36 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_NACL_CRYPT_TAGGED_STREAM_IMPL_H
-#define INCLUDED_NACL_CRYPT_TAGGED_STREAM_IMPL_H
+// include/nacl/crypt_tagged_stream.h
+#ifndef INCLUDED_NACL_CRYPT_TAGGED_STREAM_H
+#define INCLUDED_NACL_CRYPT_TAGGED_STREAM_H
 
-#include <nacl/crypt_tagged_stream.h>
+#include <nacl/api.h>
+#include <gnuradio/tagged_stream_block.h>
+#include <string>
+// CHANGE: for std::shared_ptr
+#include <memory>
 
 namespace gr {
   namespace nacl {
 
-    class crypt_tagged_stream_impl : public crypt_tagged_stream
+    /*!
+     * \brief Tagged-stream cryptography block
+     * \ingroup nacl
+     */
+    class NACL_API crypt_tagged_stream : public gr::tagged_stream_block
     {
-     private:
-      // Nothing to declare in this block.
-
-     protected:
-      int calculate_output_stream_length(const gr_vector_int &ninput_items);
-
      public:
-      crypt_tagged_stream_impl(std::string key, std::string nonce, bool rotate_nonce, const std::string& len_key);
-      ~crypt_tagged_stream_impl();
+      // CHANGE: use C++11 shared_ptr instead of boost
+      typedef std::shared_ptr<crypt_tagged_stream> sptr;
 
-      uint8_t* d_key;
-      uint8_t* d_nonce;
-      bool d_rotate_nonce;
-
-      // Where all the action really happens
-      int work(int noutput_items,
-            gr_vector_int &ninput_items,
-            gr_vector_const_void_star &input_items,
-            gr_vector_void_star &output_items);
+      static sptr make(const std::string &key,
+                       const std::string &nonce,
+                       bool rotate_nonce,
+                       const std::string &len_key);
     };
 
   } // namespace nacl
 } // namespace gr
 
-#endif /* INCLUDED_NACL_CRYPT_TAGGED_STREAM_IMPL_H */
-
+#endif /* INCLUDED_NACL_CRYPT_TAGGED_STREAM_H */

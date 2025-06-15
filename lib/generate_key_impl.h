@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/* Copyright 2015 Stefan Wunsch
+/* Copyright 2025 Joao Alves
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_NACL_GENERATE_KEY_IMPL_H
-#define INCLUDED_NACL_GENERATE_KEY_IMPL_H
+// include/nacl/generate_key.h
+#ifndef INCLUDED_NACL_GENERATE_KEY_H
+#define INCLUDED_NACL_GENERATE_KEY_H
 
-#include <nacl/generate_key.h>
+#include <nacl/api.h>
+#include <gnuradio/block.h>
+#include <string>
+// CHANGE: for std::shared_ptr
+#include <memory>
 
 namespace gr {
   namespace nacl {
 
-    class generate_key_impl : public generate_key
+    /*!
+     * \brief Symmetric key generator block
+     * \ingroup nacl
+     */
+    class NACL_API generate_key : virtual public gr::block
     {
-     private:
-      // Nothing to declare in this block.
-
      public:
-      generate_key_impl(std::string filename_key);
-      ~generate_key_impl();
+      // CHANGE: use C++11 shared_ptr instead of boost
+      typedef std::shared_ptr<generate_key> sptr;
+
+      static sptr make(const std::string &filename_key);
     };
 
   } // namespace nacl
 } // namespace gr
 
-#endif /* INCLUDED_NACL_GENERATE_KEY_IMPL_H */
-
+#endif /* INCLUDED_NACL_GENERATE_KEY_H */

@@ -21,6 +21,8 @@
 #ifndef INCLUDED_NACL_DECRYPT_SECRET_H
 #define INCLUDED_NACL_DECRYPT_SECRET_H
 
+#pragma once
+#include <memory>
 #include <nacl/api.h>
 #include <gnuradio/block.h>
 
@@ -35,7 +37,7 @@ namespace gr {
     class NACL_API decrypt_secret : virtual public gr::block
     {
      public:
-      typedef boost::shared_ptr<decrypt_secret> sptr;
+      typedef std::shared_ptr<decrypt_secret> sptr;
 
       /*!
        * \brief Return a shared_ptr to a new instance of nacl::decrypt_secret.
