@@ -17,33 +17,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// include/nacl/generate_key.h
-#ifndef INCLUDED_NACL_GENERATE_KEY_H
-#define INCLUDED_NACL_GENERATE_KEY_H
+// lib/generate_key_impl.h
+#ifndef INCLUDED_NACL_GENERATE_KEY_IMPL_H
+#define INCLUDED_NACL_GENERATE_KEY_IMPL_H
 
-#include <nacl/api.h>
-#include <gnuradio/block.h>
+#include <nacl/generate_key.h>
+#include <pmt/pmt.h>
 #include <string>
-// CHANGE: for std::shared_ptr
-#include <memory>
 
 namespace gr {
   namespace nacl {
 
-    /*!
-     * \brief Symmetric key generator block
-     * \ingroup nacl
-     */
-    class NACL_API generate_key : virtual public gr::block
+    class generate_key_impl : public generate_key
     {
-     public:
-      // CHANGE: use C++11 shared_ptr instead of boost
-      typedef std::shared_ptr<generate_key> sptr;
+     private:
+      pmt::pmt_t d_port_id_in;
+      pmt::pmt_t d_port_id_out;    // CHANGE: declare output port
+      std::string d_key_file;
 
-      static sptr make(const std::string &filename_key);
+     public:
+      generate_key_impl(const std::string &filename_key);
+      ~generate_key_impl() override;
+
+      void handle_msg(pmt::pmt_t msg) override;
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items) override;
     };
 
   } // namespace nacl
 } // namespace gr
 
-#endif /* INCLUDED_NACL_GENERATE_KEY_H */
+#endif /* INCLUDED_NACL_GENERATE_KEY_IMPL_H */

@@ -17,36 +17,41 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// include/nacl/crypt_tagged_stream.h
-#ifndef INCLUDED_NACL_CRYPT_TAGGED_STREAM_H
-#define INCLUDED_NACL_CRYPT_TAGGED_STREAM_H
+// lib/crypt_tagged_stream_impl.h
+#ifndef INCLUDED_NACL_CRYPT_TAGGED_STREAM_IMPL_H
+#define INCLUDED_NACL_CRYPT_TAGGED_STREAM_IMPL_H
 
-#include <nacl/api.h>
-#include <gnuradio/tagged_stream_block.h>
+#include <nacl/crypt_tagged_stream.h>
+#include <pmt/pmt.h>
 #include <string>
-// CHANGE: for std::shared_ptr
-#include <memory>
 
 namespace gr {
   namespace nacl {
 
-    /*!
-     * \brief Tagged-stream cryptography block
-     * \ingroup nacl
-     */
-    class NACL_API crypt_tagged_stream : public gr::tagged_stream_block
+    class crypt_tagged_stream_impl : public crypt_tagged_stream
     {
-     public:
-      // CHANGE: use C++11 shared_ptr instead of boost
-      typedef std::shared_ptr<crypt_tagged_stream> sptr;
+     private:
+      pmt::pmt_t d_port_id_in;
+      pmt::pmt_t d_port_id_out;    // CHANGE: declare output port
+      std::string d_key;
+      std::string d_nonce;
+      bool        d_rotate_nonce;
 
-      static sptr make(const std::string &key,
-                       const std::string &nonce,
-                       bool rotate_nonce,
-                       const std::string &len_key);
+     public:
+      crypt_tagged_stream_impl(const std::string &key,
+                               const std::string &nonce,
+                               bool rotate_nonce,
+                               const std::string &len_key);
+      ~crypt_tagged_stream_impl() override;
+
+      int calculate_output_stream_length(const gr_vector_int &ninput_items) override;
+      void handle_msg(pmt::pmt_t msg) override;
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items) override;
     };
 
   } // namespace nacl
 } // namespace gr
 
-#endif /* INCLUDED_NACL_CRYPT_TAGGED_STREAM_H */
+#endif /* INCLUDED_NACL_CRYPT_TAGGED_STREAM_IMPL_H */

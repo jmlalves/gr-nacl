@@ -17,33 +17,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// include/nacl/decrypt_secret.h
-#ifndef INCLUDED_NACL_DECRYPT_SECRET_H
-#define INCLUDED_NACL_DECRYPT_SECRET_H
+// lib/decrypt_secret_impl.h
+#ifndef INCLUDED_NACL_DECRYPT_SECRET_IMPL_H
+#define INCLUDED_NACL_DECRYPT_SECRET_IMPL_H
 
-#include <nacl/api.h>
-#include <gnuradio/block.h>
+#include <nacl/decrypt_secret.h>
+#include <pmt/pmt.h>
 #include <string>
-// CHANGE: for std::shared_ptr
-#include <memory>
 
 namespace gr {
   namespace nacl {
 
-    /*!
-     * \brief Secret-key decryption block
-     * \ingroup nacl
-     */
-    class NACL_API decrypt_secret : virtual public gr::block
+    class decrypt_secret_impl : public decrypt_secret
     {
-     public:
-      // CHANGE: use C++11 shared_ptr instead of boost
-      typedef std::shared_ptr<decrypt_secret> sptr;
+     private:
+      pmt::pmt_t d_port_id_in;
+      pmt::pmt_t d_port_id_out;    // CHANGE: declare output port
+      std::string d_key_file;
 
-      static sptr make(const std::string &filename_key);
+     public:
+      decrypt_secret_impl(const std::string &filename_key);
+      ~decrypt_secret_impl() override;
+
+      void handle_msg(pmt::pmt_t msg) override;
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items) override;
     };
 
   } // namespace nacl
 } // namespace gr
 
-#endif /* INCLUDED_NACL_DECRYPT_SECRET_H */
+#endif /* INCLUDED_NACL_DECRYPT_SECRET_IMPL_H */

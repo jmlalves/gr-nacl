@@ -18,34 +18,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// include/nacl/generate_keypair.h
-#ifndef INCLUDED_NACL_GENERATE_KEYPAIR_H
-#define INCLUDED_NACL_GENERATE_KEYPAIR_H
+// lib/generate_keypair_impl.h
+#ifndef INCLUDED_NACL_GENERATE_KEYPAIR_IMPL_H
+#define INCLUDED_NACL_GENERATE_KEYPAIR_IMPL_H
 
-#include <nacl/api.h>
-#include <gnuradio/block.h>
+#include <nacl/generate_keypair.h>
+#include <pmt/pmt.h>
 #include <string>
-// CHANGE: for std::shared_ptr
-#include <memory>
 
 namespace gr {
   namespace nacl {
 
-    /*!
-     * \brief Public/secret keypair generator block
-     * \ingroup nacl
-     */
-    class NACL_API generate_keypair : virtual public gr::block
+    class generate_keypair_impl : public generate_keypair
     {
-     public:
-      // CHANGE: use C++11 shared_ptr instead of boost
-      typedef std::shared_ptr<generate_keypair> sptr;
+     private:
+      pmt::pmt_t d_port_id_in;
+      pmt::pmt_t d_port_id_sk;     // CHANGE: secret-key port
+      pmt::pmt_t d_port_id_pk;     // CHANGE: public-key port
+      std::string d_sk_file;
+      std::string d_pk_file;
 
-      static sptr make(const std::string &filename_sk,
-                       const std::string &filename_pk);
+     public:
+      generate_keypair_impl(const std::string &filename_sk,
+                            const std::string &filename_pk);
+      ~generate_keypair_impl() override;
+
+      void handle_msg(pmt::pmt_t msg) override;
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items) override;
     };
 
   } // namespace nacl
 } // namespace gr
 
-#endif /* INCLUDED_NACL_GENERATE_KEYPAIR_H */
+#endif /* INCLUDED_NACL_GENERATE_KEYPAIR_IMPL_H */
