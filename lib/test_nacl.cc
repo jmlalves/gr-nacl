@@ -20,29 +20,55 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <nacl/generate_key.h>
+#include <nacl/generate_keypair.h>
+#include <nacl/encrypt_public.h>
+#include <nacl/decrypt_public.h>
+#include <nacl/encrypt_secret.h>
+#include <nacl/decrypt_secret.h>
 
-#include <cppunit/TextTestRunner.h>
-#include <cppunit/XmlOutputter.h>
-
-#include <gnuradio/gtests.h>
-#include "qa_nacl.h"
-#include <iostream>
-#include <fstream>
-
-int
-main (int argc, char **argv)
+class test_nacl : public CppUnit::TestFixture
 {
-  CppUnit::TextTestRunner runner;
-  std::ofstream xmlfile(get_unittest_path("nacl.xml").c_str());
-  CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
+    CPPUNIT_TEST_SUITE(test_nacl);
+    CPPUNIT_TEST(test_generate_key);
+    CPPUNIT_TEST(test_generate_keypair);
+    CPPUNIT_TEST(test_encrypt_decrypt_public);
+    CPPUNIT_TEST(test_encrypt_decrypt_secret);
+    CPPUNIT_TEST_SUITE_END();
 
-  runner.addTest(qa_nacl::suite());
-  runner.setOutputter(xmlout);
+public:
+    void setUp()    {}
+    void tearDown() {}
 
-  bool was_successful = runner.run("", false);
+    void test_generate_key()
+    {
+        auto blk = gr::nacl::generate_key::make("test_key.bin");
+        CPPUNIT_ASSERT(blk);
+    }
 
-  return was_successful ? 0 : 1;
-}
+    void test_generate_keypair()
+    {
+        auto blk = gr::nacl::generate_keypair::make("sk.bin","pk.bin");
+        CPPUNIT_ASSERT(blk);
+    }
+
+    void test_encrypt_decrypt_public()
+    {
+        auto enc = gr::nacl::encrypt_public::make("pk.bin","sk.bin");
+        CPPUNIT_ASSERT(enc);
+        auto dec = gr::nacl::decrypt_public::make("pk.bin","sk.bin");
+        CPPUNIT_ASSERT(dec);
+    }
+
+    void test_encrypt_decrypt_secret()
+    {
+        auto enc = gr::nacl::encrypt_secret::make("secret_key.bin");
+        CPPUNIT_ASSERT(enc);
+        auto dec = gr::nacl::decrypt_secret::make("secret_key.bin");
+        CPPUNIT_ASSERT(dec);
+    }
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(test_nacl);

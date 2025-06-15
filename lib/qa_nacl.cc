@@ -25,12 +25,30 @@
  * add them here.
  */
 
-#include "qa_nacl.h"
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <nacl/crypt_tagged_stream.h>
 
-CppUnit::TestSuite *
-qa_nacl::suite()
+class qa_nacl : public CppUnit::TestFixture
 {
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("nacl");
+    CPPUNIT_TEST_SUITE(qa_nacl);
+    CPPUNIT_TEST(test_crypt_tagged_stream);
+    CPPUNIT_TEST_SUITE_END();
 
-  return s;
-}
+public:
+    void setUp()    {}
+    void tearDown() {}
+
+    void test_crypt_tagged_stream()
+    {
+        auto blk = gr::nacl::crypt_tagged_stream::make(
+            "mykey",             // encryption key
+            "mynonce",           // nonce
+            false,               // rotate nonce
+            "packet_len"         // length-tag key
+        );
+        CPPUNIT_ASSERT(blk);
+    }
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(qa_nacl);
