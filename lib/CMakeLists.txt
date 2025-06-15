@@ -36,11 +36,6 @@ list(APPEND nacl_sources
     crypt_tagged_stream_impl.cc
 )
 
-# link in the GNURadio runtime so symbols like gr::block are resolved
-target_link_libraries(gnuradio-nacl
-    ${GNURADIO_RUNTIME_LIBRARIES}
-)
-
 set(nacl_sources "${nacl_sources}" PARENT_SCOPE)
 if(NOT nacl_sources)
 	MESSAGE(STATUS "No C++ sources... skipping lib/")
