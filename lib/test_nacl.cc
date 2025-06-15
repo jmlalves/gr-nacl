@@ -27,7 +27,7 @@
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/XmlOutputter.h>
 
-#include <gnuradio/unittests.h>
+#include <gnuradio/gtests.h>
 #include "qa_nacl.h"
 #include <iostream>
 #include <fstream>
