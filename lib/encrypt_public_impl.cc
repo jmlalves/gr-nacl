@@ -37,8 +37,11 @@ encrypt_public::make(const std::string &filename_pk,
 
 encrypt_public_impl::encrypt_public_impl(const std::string &filename_pk,
                                         const std::string &filename_sk)
-    : d_pk_file(filename_pk),
-    d_sk_file(filename_sk)
+    : gr::block("encrypt_public",
+                gr::io_signature::make(0, 0, 0),
+                gr::io_signature::make(0, 0, 0)),  // ← base-class init
+      d_pk_file(filename_pk),
+      d_sk_file(filename_sk)
 {
     d_port_id_in = pmt::mp("in");
     message_port_register_in(d_port_id_in);
