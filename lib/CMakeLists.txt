@@ -50,7 +50,7 @@ target_link_libraries(gnuradio-nacl
         ${GNURADIO_ALL_LIBRARIES}
         ${SODIUM_LIBRARIES}
         ${PYTHON_LIBRARIES}
-        gnuradio::runtime
+        ${GNURADIO_RUNTIME_LIBRARIES}
 )
 target_compile_features(gnuradio-nacl PUBLIC cxx_std_17)
 #set_target_properties(gnuradio-nacl PROPERTIES 
