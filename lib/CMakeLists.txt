@@ -43,7 +43,15 @@ if(NOT nacl_sources)
 endif(NOT nacl_sources)
 
 add_library(gnuradio-nacl SHARED ${nacl_sources})
-target_link_libraries(gnuradio-nacl ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${SODIUM_LIBRARIES})
+find_package(Gnuradio REQUIRED COMPONENTS runtime python)
+target_link_libraries(gnuradio-nacl 
+    PUBLIC
+        ${Boost_LIBRARIES}
+        ${GNURADIO_ALL_LIBRARIES}
+        ${SODIUM_LIBRARIES}
+        ${PYTHON_LIBRARIES}
+        gnuradio::runtime
+)
 target_compile_features(gnuradio-nacl PUBLIC cxx_std_17)
 #set_target_properties(gnuradio-nacl PROPERTIES 
 #    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${VERSION_PATCH}
